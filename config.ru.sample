@@ -1,0 +1,17 @@
+require "bundler/setup"
+Bundler.setup
+
+$LOAD_PATH.unshift File.expand_path("../lib", __FILE__)
+
+require "hako"
+Hako.setup do |config|
+  config[:store] = Hako::Store::File.new({
+    :root => "/tmp/foobar"
+  })
+end
+
+use Rack::Auth::Basic, "private" do |username, password|
+  username == 'foo' && password == 'bar'
+end
+
+run Hako::App
